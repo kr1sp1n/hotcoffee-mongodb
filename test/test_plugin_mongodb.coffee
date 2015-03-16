@@ -4,7 +4,7 @@ should = require 'should'
 sinon = require 'sinon'
 EventEmitter = require('events').EventEmitter
 
-describe 'mongo_db Plugin', ->
+describe 'mongodb Plugin', ->
   beforeEach ->
     @app = new EventEmitter()
     @turtles = [
