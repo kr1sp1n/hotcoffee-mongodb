@@ -1,0 +1,31 @@
+{
+  "name": "hotcoffee-mongodb",
+  "version": "0.0.1",
+  "description": "Hotcoffee plugin to persist via MongoDB",
+  "main": "index.coffee",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kr1sp1n/hotcoffee-mongodb.git"
+  },
+  "keywords": [
+    "hotcoffee",
+    "mongodb",
+    "plugin"
+  ],
+  "author": "kr1sp1n",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kr1sp1n/hotcoffee-mongodb/issues"
+  },
+  "homepage": "https://github.com/kr1sp1n/hotcoffee-mongodb",
+  "dependencies": {
+    "mongodb": "^1.4.10",
+    "coffee-script": "^1.8.0"
+  }
+}
