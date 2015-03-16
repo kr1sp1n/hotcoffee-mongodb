@@ -34,7 +34,12 @@
     "sinon": "^1.14.0",
     "mocha-spec-cov-alt": "^0.2.4",
     "blanket": "^1.1.6",
-    "mocha-lcov-reporter": "0.0.2"
+    "mocha-lcov-reporter": "0.0.2",
+    "coveralls": "^2.11.2"
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
   },
   "config": {
     "blanket": {
