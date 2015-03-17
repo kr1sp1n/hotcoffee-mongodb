@@ -28,7 +28,7 @@ describe 'mongodb Plugin', ->
     @collection.find.returns @collection
     @db.collection.returns @collection
 
-    @db.collectionNames.callsArgWith 1, null, ["hotcoffee.turtles"]
+    @db.collectionNames.callsArgWith 0, null, [{name:'turtles'}]
     @client =
       connect: sinon.stub()
     @client.connect.callsArgWith 1, null, @db # stub callback

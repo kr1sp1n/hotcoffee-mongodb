@@ -11,8 +11,9 @@ class Plugin extends EventEmitter
     @db = null
     @connect (err)=>
       @registerEvents()
-      @db.collectionNames namesOnly: true, (err, names)=>
-        @loadCollection name.split('.')[1] for name in (names.filter (name)-> name.split('.')[1] != "system")
+      @db.collectionNames (err, names)=>
+        names = (names.map (x)-> x.name).filter (name)-> name.split('.')[0] != "system"
+        @loadCollection name for name in names
 
   connect: (done)->
     return done new Error 'No MongoDB URL set' unless @opts?.url?
