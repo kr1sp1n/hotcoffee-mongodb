@@ -24,7 +24,7 @@ cov:
 	$(MOCHA_BIN) --compilers coffee:coffee-script/register --colors -R mocha-spec-cov-alt --require blanket $(TEST_UNIT_DIR)
 
 coveralls:
-	NODE_ENV=test $(MOCHA_BIN) --compilers coffee:coffee-script/register -R mocha-lcov-reporter $(TEST_UNIT_DIR) | $(BIN_DIR)/coveralls
+	NODE_ENV=test $(MOCHA_BIN) --compilers coffee:coffee-script/register -R mocha-lcov-reporter --require blanket $(TEST_UNIT_DIR) | $(BIN_DIR)/coveralls
 
 cov-html:
 	$(MOCHA_BIN) --compilers coffee:coffee-script/register -R html-cov --require blanket $(TEST_UNIT_DIR) > ./cov.html
