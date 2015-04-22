@@ -12,7 +12,7 @@ class Plugin extends EventEmitter
     @connect (err)=>
       @registerEvents()
       @db.collectionNames (err, names)=>
-        names = (names.map (x)-> x.name).filter (name)-> name.split('.')[0] != "system"
+        names = (names.map (x)-> x.name.split('.')[1]).filter (name)-> name.split('.')[0] != "system"
         @loadCollection name for name in names
 
   connect: (done)->
@@ -43,8 +43,11 @@ class Plugin extends EventEmitter
       if @collections[resource]?
         ids = items.map (x)-> x._id
         opts = multi: true
-        selector = {'_id':{$in:ids}}
-        @collections[resource].update selector, {$set:data}, opts, (err, count)->
+        selector = { '_id':{ $in:ids } }
+        delta = {}
+        for k,v of data
+          delta["props."+k] = v
+        @collections[resource].update selector, { $set: delta }, opts, (err, count)->
 
 module.exports = (app, opts)->
   return new Plugin app, opts
