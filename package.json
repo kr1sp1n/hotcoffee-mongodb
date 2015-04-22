@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/kr1sp1n/hotcoffee-mongodb",
   "dependencies": {
-    "mongodb": "^1.4.10",
+    "mongodb": "1.4.10",
     "coffee-script": "^1.8.0"
   },
   "devDependencies": {
