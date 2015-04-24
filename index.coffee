@@ -49,5 +49,13 @@ class Plugin extends EventEmitter
           delta["props."+k] = v
         @collections[resource].update selector, { $set: delta }, opts, (err, count)->
 
+    @app.on 'PUT', (resource, items, data)=>
+      if @collections[resource]?
+        ids = items.map (x)-> x._id
+        opts = multi: true
+        selector = { '_id':{ $in:ids } }
+        if data.links?
+          @collections[resource].update selector, { $push: { links: { $each: data.links } } }, opts, (err, count)->
+
 module.exports = (app, opts)->
   return new Plugin app, opts

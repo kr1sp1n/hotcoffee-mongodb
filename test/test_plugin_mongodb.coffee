@@ -4,15 +4,22 @@ should = require 'should'
 sinon = require 'sinon'
 EventEmitter = require('events').EventEmitter
 
+
 describe 'mongodb Plugin', ->
+  before ->
+    @turtleNames = ['Donatello', 'Leonardo', 'Michelangelo', 'Raphael']
+
   beforeEach ->
+    @turtles = for name, i in @turtleNames
+      { _id: i+1, props: { name: name, id: i+1 }, links: [] }
+    @links = {}
+    for name1, i in @turtleNames
+      @links[name1] = []
+      for name2, j in @turtleNames
+        if name1 != name2
+          @links[name1].push { rel: 'brother', href: "link to #{name2}", type: 'application/json' }
+
     @app = new EventEmitter()
-    @turtles = [
-      { id: 1, _id: 1, name: 'Donatello' }
-      { id: 2, _id: 2, name: 'Leonardo' }
-      { id: 3, _id: 3, name: 'Michelangelo' }
-      { id: 4, _id: 4, name: 'Raphael' }
-    ]
     @app.db = {}
     @db =
       collectionNames: sinon.stub()
@@ -28,7 +35,7 @@ describe 'mongodb Plugin', ->
     @collection.find.returns @collection
     @db.collection.returns @collection
 
-    @db.collectionNames.callsArgWith 0, null, [{name:'testdb.turtles'}]
+    @db.collectionNames.callsArgWith 0, null, [{name:'testdb.turtle'}]
     @client =
       connect: sinon.stub()
     @client.connect.callsArgWith 1, null, @db # stub callback
@@ -58,7 +65,7 @@ describe 'mongodb Plugin', ->
   describe 'loadCollection(resource)', ->
 
     it 'should load MongoDB collections in the app DB', ->
-      resource = 'turtles'
+      resource = 'turtle'
       @plugin.loadCollection resource
       @db.collection.called.should.be.ok
       @db.collection.calledWith(resource).should.be.ok
@@ -67,7 +74,7 @@ describe 'mongodb Plugin', ->
 
   describe 'registerEvents()', ->
 
-    it 'should listen on "POST" events of the app', ->
+    it 'should listen on "POST" events from the app', ->
       resource = 'beatles'
       data = name: 'John Lennon'
       @plugin.registerEvents()
@@ -76,17 +83,25 @@ describe 'mongodb Plugin', ->
       @collection.insert.called.should.be.ok
       @collection.insert.calledWith(data).should.be.ok
 
-    it 'should listen on "PATCH" events of the app', ->
-      resource = 'turtles'
+    it 'should listen on "PATCH" events from the app', ->
+      resource = 'turtle'
       items = @turtles
       data = status: 'hungry'
       @plugin.registerEvents()
       @app.emit 'PATCH', resource, items, data
       @collection.update.called.should.be.ok
 
-    it 'should listen on "DELETE" events of the app', ->
-      resource = 'turtles'
+    it 'should listen on "DELETE" events from the app', ->
+      resource = 'turtle'
       items = @turtles
       @plugin.registerEvents()
       @app.emit 'DELETE', resource, items
       @collection.remove.called.should.be.ok
+
+    it 'should listen on "PUT" events from the app', ->
+      resource = 'turtle'
+      items = @turtles
+      data = links: [ { rel: 'master', href: 'link to Splinter', type: 'application/json' } ]
+      @plugin.registerEvents()
+      @app.emit 'PUT', resource, items, data
+      @collection.update.called.should.be.ok
