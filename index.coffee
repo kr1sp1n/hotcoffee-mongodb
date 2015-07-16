@@ -28,18 +28,25 @@ class Plugin extends EventEmitter
 
   registerEvents: ->
 
-    @app.on 'POST', (resource, data)=>
+    @app.on 'POST', (req, res)=>
+      resource = req.resource
+      data = res.result[0]
       unless @collections[resource]?
         @collections[resource] = @db.collection resource
       @collections[resource].insert data, (err, docs)->
 
-    @app.on 'DELETE', (resource, items)=>
+    @app.on 'DELETE', (req, res)=>
+      resource = req.resource
+      items = res.result
       if @collections[resource]?
         ids = items.map (x)-> x._id
         selector = {'_id':{$in:ids}}
         @collections[resource].remove selector, (err, count)->
 
-    @app.on 'PATCH', (resource, items, data)=>
+    @app.on 'PATCH', (req, res)=>
+      resource = req.resource
+      items = res.result
+      data = req.body
       if @collections[resource]?
         ids = items.map (x)-> x._id
         opts = multi: true
@@ -49,7 +56,10 @@ class Plugin extends EventEmitter
           delta["props."+k] = v
         @collections[resource].update selector, { $set: delta }, opts, (err, count)->
 
-    @app.on 'PUT', (resource, items, data)=>
+    @app.on 'PUT', (req, res)=>
+      resource = req.resource
+      items = res.result
+      data = req.body
       if @collections[resource]?
         ids = items.map (x)-> x._id
         opts = multi: true

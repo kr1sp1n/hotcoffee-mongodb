@@ -4,7 +4,6 @@ should = require 'should'
 sinon = require 'sinon'
 EventEmitter = require('events').EventEmitter
 
-
 describe 'mongodb Plugin', ->
   before ->
     @turtleNames = ['Donatello', 'Leonardo', 'Michelangelo', 'Raphael']
@@ -77,8 +76,10 @@ describe 'mongodb Plugin', ->
     it 'should listen on "POST" events from the app', ->
       resource = 'beatles'
       data = name: 'John Lennon'
+      req = resource: resource
+      res = result: [data]
       @plugin.registerEvents()
-      @app.emit 'POST', resource, data
+      @app.emit 'POST', req, res
       @db.collection.calledWith(resource).should.be.ok
       @collection.insert.called.should.be.ok
       @collection.insert.calledWith(data).should.be.ok
@@ -87,21 +88,27 @@ describe 'mongodb Plugin', ->
       resource = 'turtle'
       items = @turtles
       data = status: 'hungry'
+      req = resource: resource, body: data
+      res = result: items
       @plugin.registerEvents()
-      @app.emit 'PATCH', resource, items, data
+      @app.emit 'PATCH', req, res
       @collection.update.called.should.be.ok
 
     it 'should listen on "DELETE" events from the app', ->
       resource = 'turtle'
       items = @turtles
+      req = resource: resource
+      res = result: items
       @plugin.registerEvents()
-      @app.emit 'DELETE', resource, items
+      @app.emit 'DELETE', req, res
       @collection.remove.called.should.be.ok
 
     it 'should listen on "PUT" events from the app', ->
       resource = 'turtle'
       items = @turtles
       data = links: [ { rel: 'master', href: 'link to Splinter', type: 'application/json' } ]
+      req = resource: resource, body: data
+      res = result: items
       @plugin.registerEvents()
-      @app.emit 'PUT', resource, items, data
+      @app.emit 'PUT', req, res
       @collection.update.called.should.be.ok
